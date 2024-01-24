@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{{ parent() }}
+	User
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-10">
+				<h1 class="text-center">Liste des Users</h1>
+				{% for user in users %}
+					{{ user.id }}
+					{{ user.email }}
+					{{ user.lastName }}
+					{{ user.firstName }}
+					{{ user.address }}
+					{{ user.postalCode }}
+					{{ user.city }}
+					{{ user.phone }}
+					{% for role in user.roles %}
+						{{ role }}
+					{% endfor %}
+					<a href="index.php?page=updateUser&id={{ user.id }}">
+						<i class="bi bi-pen-fill"></i>
+					</a>
+					<a href="index.php?page=deleteUser&id={{ user.id }}">
+						<i class="bi bi-trash2-fill"></i>
+					</a><br/>
+					{% endfor %}
+
+
+
+				</div>
+			</div>
+		</div>
+	{% endblock %}
