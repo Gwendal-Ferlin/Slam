@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+{% block title %} {{ parent() }} Panier {% endblock %}
+{% block content %}
+    <style>
+        /* Style du tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        /* Style des cellules de tableau */
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style des en-têtes de tableau */
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Style des lignes de tableau alternées */
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style de survol des lignes de tableau */
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+    <h1>Détails du Panier</h1>
+    {% if panier is iterable %}
+        <table>
+            <tr>
+                <th>Produit</th>
+                <th>Prix Unitaire</th>
+                <th>Quantité</th>
+                <th>Prix Total</th>
+            </tr>
+            {% for item in panier %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.product_price }} €</td>
+                    <td>{{ item.product_quantity }}</td>
+                    <td>{{ item.total_price }} €</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Le panier est vide.</p>
+    {% endif %}
+{% endblock %}

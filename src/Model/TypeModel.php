@@ -67,4 +67,16 @@ class TypeModel
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+    public function getTypeById(int $id): ?Type
+    {
+        $sql = "SELECT * FROM Type WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+        return new Type($row['id'], $row['label']);
+    }
 }

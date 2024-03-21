@@ -1,0 +1,47 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{{ parent() }}
+	Avis pour
+	{{ produit.name }}
+{% endblock %}
+
+{% block content %}
+
+	<style>
+		.avis {
+			background-color: #f9f9f9;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			padding: 20px;
+			margin: 20px auto;
+			max-width: 400px;
+		}
+
+		.avis h2 {
+			color: #333;
+			font-size: 20px;
+			margin-bottom: 10px;
+		}
+
+		.avis p {
+			color: #666;
+			font-size: 16px;
+			margin-bottom: 5px;
+		}
+	</style>
+	{% for avi in avis %}
+		<div class="avis">
+			{% set n = 5 - avi.note %}
+			{% for val in range (1, avi.note) %}
+				<i class="bi bi-star-fill"></i>
+			{% endfor %}
+			{% for val in n %}
+				<i class="bi bi-star"></i>
+			{% endfor %}
+			<p>{{avi.description}}</p>
+			<p>{{avi.id_user}}</p>
+		</div>
+	{% endfor %}
+
+</body></html>{% endblock %}

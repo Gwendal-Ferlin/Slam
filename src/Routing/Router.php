@@ -5,7 +5,10 @@ declare (strict_types = 1);
 namespace MyApp\Routing;
 
 use MyApp\Controller\DefaultController;
+use MyApp\Controller\ProductController;
 use MyApp\Controller\OrderController;
+use MyApp\Controller\CartController;
+use MyApp\Controller\CartItemController;
 use MyApp\Service\DependencyContainer;
 
 class Router
@@ -28,7 +31,9 @@ class Router
             'home' => [DefaultController::class, 'home', []],
             'contact' => [DefaultController::class, 'contact', []],
             'produit' => [DefaultController::class, 'produit', []],
-            'addProduct' => [DefaultController::class, 'addProduct', ['admin']],
+            'article' => [DefaultController::class, 'article', []],
+            'addProduct' => [ProductController::class, 'addProduct', ['admin']],
+            'updateProduct' => [ProductController::class, 'updateProduct', ['admin']],
             'types' => [DefaultController::class, 'types', []],
             'updateType' => [DefaultController::class, 'updateType', []],
             'addType' => [DefaultController::class, 'addType', []],
@@ -46,6 +51,16 @@ class Router
             '404' => [DefaultController::class, 'error404', []],
             '403' => [DefaultController::class, 'error403', []],
             '500' => [DefaultController::class, 'error500', []],
+
+            'cart' => [CartController::class, 'cart', []],
+            'cart_list' => [CartController::class, 'cart_list', ['admin']],
+            'cart_list2' => [CartController::class, 'cart_list2', ['admin']],
+            'delete_cart' => [CartController::class, 'delete_cart', ['admin']],
+            'add_to_cart' => [CartController::class, 'add_to_cart', []],
+
+            'avis' => [DefaultController::class, 'avis', ['admin', 'user']],
+            'avis2' => [DefaultController::class, 'avis2', ['admin', 'user']],
+            'lireAvis' => [DefaultController::class, 'lireAvis', []],
 
         ];
         $this->defaultPage = 'home';

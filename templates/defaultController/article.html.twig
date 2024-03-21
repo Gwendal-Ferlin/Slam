@@ -1,0 +1,59 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ parent() }}
+    Page Article {{ produit.name }}
+{% endblock %}
+
+{% block content %}
+    <style>
+        .add-to-cart-button {
+            margin-top: 60px;
+            height: 35px;
+            position: relative;
+            left: 90%;
+        }
+
+        article {
+            margin-left: 25px;
+            padding-left: 25px;
+        }
+    </style>
+    <div class="article">
+        <form action="index.php?page=add_to_cart" method="post">
+            <input type="hidden" name="productId" value="{{ produit.id }}">
+            <input type="hidden" name="quantity" value="1"> {# Vous pouvez ajuster la quantité si nécessaire #}
+            <button type="submit" class="add-to-cart-button">Ajouter au panier</button>
+        </form>
+        <h1>{{ produit.name }}</h1>
+        <p>Description: {{ produit.description }}</p>
+        <p>Prix: {{ produit.price }} €</p>
+        <p>Stock: {{ produit.stock }}</p>
+        <br>
+        {% if nombre|round(1, 'floor') == nombre %}
+            {% set moyenne = moyenne - 0.5 %}
+        {% else %}
+            {% set n = 5 - moyenne %}
+        {% endif %}
+        {% for val in range(1, moyenne ) %}
+            <i class="bi bi-star-fill"></i>
+        {% endfor %}
+        {% if nombre|round(1, 'floor') == nombre %}
+            <i class="bi bi-star-half"></i>
+        {% endif %}
+        {% for val2 in range(1, n) %}
+            <i class="bi bi-star"></i>
+        {% endfor %}
+        <p>{{ avi.description }}</p>
+        <p>{{ avi.id_user }}</p>
+        <br>
+        <form action="index.php?page=avis" method="post">
+            <input type="hidden" name="produit" value="{{ produit.id }}">
+            <input type="submit" value="Donnez votre avis sur ce produit" class="btn btn-primary m-2">
+        </form>
+        <form action="index.php?page=lireAvis" method="post">
+            <input type="hidden" name="produit" value="{{ produit.id }}">
+            <input type="submit" value="Lire les avis du produit" class="btn btn-primary m-2">
+        </form>
+    </div>
+{% endblock %}

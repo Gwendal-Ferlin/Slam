@@ -1,0 +1,68 @@
+{% extends "base.html.twig" %}
+{% block title %} {{ parent() }} Panier {% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Paniers</title>
+    <style>
+        /* Style du tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        /* Style des cellules de tableau */
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style des en-têtes de tableau */
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Style des lignes de tableau alternées */
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style de survol des lignes de tableau */
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Liste des Paniers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date de création</th>
+                <th>Status</th>
+                <th>ID Utilisateur</th>
+				<th>Lien</th>
+				<th>Suppression</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for panier in paniers %}
+            <tr>
+                <td>{{ panier.id }}</td>
+                <td>{{ panier.creationdate|date('Y-m-d') }}</td>
+                <td>{{ panier.status }}</td>
+                <td>{{ panier.id_user }}</td>
+				<td><a href='index.php?page=cart_list2&id={{panier.id_user}}'>Voir le panier</a></td>
+				<td><a href='index.php?page=delete_cart&id_cart={{panier.id}}'>Supprimer le panier</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+{% endblock %}

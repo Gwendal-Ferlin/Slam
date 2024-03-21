@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Modifier un produit
+{% endblock %}
+{% block content %}
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-6 align-items-center">
+				<h1 class="text-center text-primary fw-bold m-2">Modifier un 
+					produit</h1>
+				<form action="" method="post">
+					<input type="hidden" id="id" name="id" value="{{product.id}}">
+					<input type="text" id="name" name="name" class="form-control" placeholder="désignation" value="{{product.name}}" required>
+					<textarea id="description" name="description" class="form-control" placeholder="description" cols="10" rows="10" required>{{product.description}}</textarea>
+					<input type="number" id="price" name="price" class="form-control" placeholder="prix" step="0.1" value="{{product.price}}" required>
+					<input type="number" id="stock" name="stock" class="form-control" placeholder="stock" value="{{product.stock}}" required>
+					<select id="idType" name="idType" class="formcontrol" required>
+						{% for t in types %}
+							{% if t.id == product.type.id %}
+								<option value="{{t.id}}" selected>{{t.label}}</option>
+							{% else %}
+								<option value="{{t.id}}">{{t.label}}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+					<div class="text-center">
+						<input type="submit" value="Modifier" class="btn btn-primary m-2">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

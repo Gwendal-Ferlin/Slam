@@ -6,7 +6,7 @@ namespace MyApp\Controller;
 
 use MyApp\Entity\Type;
 use MyApp\Entity\User;
-use MyApp\Entity\Product;
+use MyApp\Entity\Avis;
 use MyApp\Model\ProductModel;
 use MyApp\Model\TypeModel;
 use MyApp\Model\UserModel;
@@ -23,11 +23,84 @@ class DefaultController
         $this->typeModel = $dependencyContainer->get('TypeModel');
         $this->productModel = $dependencyContainer->get('ProductModel');
         $this->userModel = $dependencyContainer->get('UserModel');
+        $this->avisModel = $dependencyContainer->get('AvisModel');
     }
 
     public function home()
     {
-        echo $this->twig->render('defaultController/home.html.twig', []);
+        $produits = $this->productModel->getAllProducts();
+        $avis = $this->avisModel->getAllAvis();
+        unset($_POST['produit']);
+        echo $this->twig->render('defaultController/home.html.twig', ['produits' => $produits, 'avis' => $avis]);
+    }
+
+    public function article()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = $_POST['produit'];
+            $produit = $this->productModel->getProductById(intVal($productId));
+            $avis = $this->avisModel->getAllAvisForProduct($productId);
+            $temp = $this->avisModel->getAllMoyenneAvisForProduct($avis);
+            $moyenne = round($temp * 2) / 2;
+            echo $this->twig->render('defaultController/article.html.twig', ['produit' => $produit, 'moyenne' => $moyenne]);
+        } else {
+            header('Location: index.php');
+        }
+    }
+
+    public function avis()
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = $_POST['produit'];
+            $user = $_SESSION['login'];
+            $produit = $this->productModel->getProductById(intVal($productId));
+            echo $this->twig->render('defaultController/avis.html.twig', ['produit' => $produit, 'login' => $user]);
+        } else {
+            header('Location: index.php');
+        }
+    }
+
+    public function avis2()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Variables pour les données de l'avis
+            $note = intVal($_POST['note']);
+            $description = $_POST['description'];
+            $id_produit = intVal($_POST['id_produit']);
+            $id_utilisateur = $_SESSION['login'];
+
+            if (!empty($_POST['note'])) {
+                $avis = new Avis(
+                    null, // $id (nullable)
+                    $id_produit, // $email
+                    $id_utilisateur, // $lastName
+                    $note, // $firstName
+                    $description, // $password
+                );
+                $success = $this->avisModel->createAvis($avis);
+                if ($success) {
+                    header('Location: index.php');
+                }
+            } else {
+                header('Location: index.php');
+            }
+
+        }
+    }
+
+    public function lireAvis()
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = $_POST['produit'];
+            $produit = $this->productModel->getProductById(intVal($productId));
+            $avis = $this->avisModel->getAllAvisForProduct($productId);
+            //$user = $this->userModel->getUserByEmail($productId);//
+            echo $this->twig->render('defaultController/lireAvis.html.twig', ['produit' => $produit, 'avis' => $avis]);
+        } else {
+            header('Location: index.php');
+        }
     }
 
     public function logout()
@@ -41,7 +114,7 @@ class DefaultController
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+            $email = $_POST['email'];
             $password = $_POST['password'];
             $user = $this->userModel->getUserByEmail($email);
             if (!$user) {
@@ -51,6 +124,7 @@ class DefaultController
                 if ($user->verifyPassword($password)) {
                     $_SESSION['login'] = $user->getEmail();
                     $_SESSION['roles'] = $user->getRoles();
+                    $_SESSION['id'] = $user->getId();
                     header('Location: index.php');
                     exit;
                 } else {
@@ -129,7 +203,7 @@ class DefaultController
 
     public function produit()
     {
-        $produits = $this->productModel->getAllProduct();
+        $produits = $this->productModel->getAllProducts();
         echo $this->twig->render('defaultController/produit.html.twig', ['produits' => $produits]);
     }
     public function user()
@@ -258,22 +332,5 @@ class DefaultController
             }
         }
         echo $this->twig->render('defaultController/addType.html.twig', []);
-    }
-    public function addProduct()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $label = filter_input(INPUT_POST, 'label', FILTER_SANITIZE_STRING);
-            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-            $prix = filter_input(INPUT_POST, 'prix', FILTER_SANITIZE_STRING);
-            $stock = filter_input(INPUT_POST, 'stock', FILTER_SANITIZE_STRING);
-            if (!empty($_POST['label'])) {
-                $product = new Product(null, $label, $description, floatVal($prix), intVal($stock));
-                $success = $this->productModel->createProduct($product);
-                if ($success) {
-                    header('Location: index.php?page=produit');
-                }
-            }
-        }
-        echo $this->twig->render('defaultController/addProduct.html.twig', []);
     }
 }
